@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Composite Materials Engineering Lab</title>
+    <style>
+        :root {
+            --bg-color: #0b132b;
+            --card-bg: #1c2541;
+            --card-hover: #232f52;
+            --accent: #00b4d8;
+            --accent-glow: rgba(0, 180, 216, 0.3);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+            --danger: #ef4444;
+            --border-color: #334155;
+        }
+
+        * {
+            box-sizing: border-box;
+            transition: all 0.2s ease;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 30px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.2rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        header p {
+            color: var(--text-muted);
+            margin-top: 5px;
+        }
+
+        /* Mission Card */
+        .mission-card {
+            background: linear-gradient(135deg, #1c2541 0%, #111827 100%);
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid var(--accent);
+            box-shadow: 0 0 15px var(--accent-glow);
+            margin-bottom: 30px;
+        }
+
+        .mission-card h2 {
+            margin-top: 0;
+            color: var(--accent);
+            font-size: 1.4rem;
+        }
+
+        .mission-reqs {
+            background: rgba(0, 180, 216, 0.1);
+            border-left: 4px solid var(--accent);
+            padding: 10px 15px;
+            border-radius: 0 6px 6px 0;
+            margin-top: 15px;
+            font-weight: 500;
+        }
+
+        /* Selection Sections */
+        .section-title {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 25px 0 12px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border-color);
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+        }
+
+        .option-card {
+            background: var(--card-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            position: relative;
+            user-select: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .option-card:hover {
+            background: var(--card-hover);
+            border-color: #475569;
+            transform: translateY(-2px);
+        }
+
+        .option-card.selected {
+            border-color: var(--accent);
+            background: rgba(0, 180, 216, 0.15);
+            box-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        .option-title {
+            font-weight: bold;
+            font-size: 1.05rem;
+            margin-bottom: 6px;
+            color: #ffffff;
+        }
+
+        .option-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.3;
+        }
+
+        /* Test Button */
+        .action-btn {
+            width: 100%;
+            padding: 18px;
+            background: var(--accent);
+            color: #0b132b;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 30px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px var(--accent-glow);
+        }
+
+        .action-btn:hover {
+            background: #48cae4;
+            transform: scale(1.01);
+        }
+
+        /* Results Display */
+        .results-panel {
+            display: none;
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 30px;
+            border: 1px solid var(--border-color);
+        }
+
+        .total-score-box {
+            text-align: center;
+            padding: 15px;
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .total-score-box .score-num {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--accent);
+        }
+
+        .score-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .score-card {
+            background: #0b132b;
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+
+        .score-card h4 {
+            margin: 0 0 5px 0;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .score-card .pts {
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+
+        .feedback-list {
+            background: #0b132b;
+            padding: 15px 20px 15px 40px;
+            border-radius: 8px;
+            line-height: 1.6;
+            font-size: 0.95rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .next-btn {
+            background: var(--success);
+            color: white;
+            margin-top: 20px;
+            box-shadow: none;
+        }
+
+        .next-btn:hover {
+            background: #059669;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Composite Engineering Lab</h1>
+        <p>Select components to engineer high-performance composite structures</p>
+    </header>
+
+    <!-- Mission Brief -->
+    <div class="mission-card">
+        <h2 id="mission-title">Mission Loading...</h2>
+        <p id="mission-desc"></p>
+        <div class="mission-reqs" id="mission-reqs"></div>
+    </div>
+
+    <!-- Interactive Cards Selection -->
+    <div class="section-title">1. Select Matrix Phase (Base)</div>
+    <div class="cards-grid" id="matrix-options">
+        <div class="option-card selected" onclick="selectOption('matrix', 'polymer', this)">
+            <div class="option-title">Polymer (Epoxy)</div>
+            <div class="option-desc">Low cost, lightweight, easy to process. Limited temperature resistance (<200°C).</div>
+        </div>
+        <div class="option-card" onclick="selectOption('matrix', 'metal', this)">
+            <div class="option-title">Metal (Aluminum/Ti)</div>
+            <div class="option-desc">Higher temp tolerance, ductile, good shear strength. Moderately heavy.</div>
+        </div>
+        <div class="option-card" onclick="selectOption('matrix', 'ceramic', this)">
+            <div class="option-title">Ceramic (Silicon Carbide)</div>
+            <div class="option-desc">Extreme thermal tolerance (>1000°C), chemically inert. Highly brittle matrix.</div>
+        </div>
+    </div>
+
+    <div class="section-title">2. Select Reinforcement Fiber</div>
+    <div class="cards-grid" id="fiber-options">
+        <div class="option-card selected" onclick="selectOption('fiber', 'carbon', this)">
+            <div class="option-title">Carbon Fiber</div>
+            <div class="option-desc">Extremely high tensile strength and stiffness. Excellent strength-to-weight ratio.</div>
+        </div>
+        <div class="option-card" onclick="selectOption('fiber', 'glass', this)">
+            <div class="option-title">Glass Fiber</div>
+            <div class="option-desc">Inexpensive, flexible, non-conductive. Heavier than carbon with moderate stiffness.</div>
+        </div>
+        <div class="option-card" onclick="selectOption('fiber', 'kevlar', this)">
+            <div class="option-title">Kevlar (Aramid)</div>
+            <div class="option-desc">Outstanding impact energy absorption & fracture toughness. Poor compression strength.</div>
+        </div>
+        <div class="option-card" onclick="selectOption('fiber', 'sic', this)">
+            <div class="option-title">Silicon Carbide (SiC)</div>
+            <div class="option-desc">High strength under extreme thermal environments. Very expensive and hard to manufacture.</div>
+        </div>
+    </div>
+
+    <div class="section-title">3. Select Fiber Architecture</div>
+    <div class="cards-grid" id="arrangement-options">
+        <div class="option-card selected" onclick="selectOption('arrangement', 'continuous_uni', this)">
+            <div class="option-title">Continuous Unidirectional</div>
+            <div class="option-desc">Maximum strength along a single principal loading axis. Weak transversely.</div>
+        </div>
+        <div class="option-card" onclick="selectOption('arrangement', 'continuous_woven', this)">
+            <div class="option-title">Continuous Woven Fabric</div>
+            <div class="option-desc">Balanced bi-directional strength (2D plane). Resist delamination & impact better.</div>
+        </div>
+        <div class="option-card" onclick="selectOption('arrangement', 'discontinuous_random', this)">
+            <div class="option-title">Short Random Discontinuous</div>
+            <div class="option-desc">Equal properties in all directions (isotropic). Enables complex 3D shape molding.</div>
+        </div>
+    </div>
+
+    <button class="action-btn" onclick="evaluateDesign()">Run Simulation & Test Material</button>
+
+    <!-- Results Display -->
+    <div class="results-panel" id="results-panel">
+        <div class="total-score-box">
+            <div style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase;">Design Rating</div>
+            <div class="score-num"><span id="total-points">0</span><span style="font-size: 1.5rem; color: var(--text-muted);"> / 100</span></div>
+        </div>
+
+        <div class="score-grid">
+            <div class="score-card">
+                <h4>Matrix Selection</h4>
+                <div class="pts" id="matrix-score">0/25</div>
+            </div>
+            <div class="score-card">
+                <h4>Fiber Selection</h4>
+                <div class="pts" id="fiber-score">0/25</div>
+            </div>
+            <div class="score-card">
+                <h4>Fiber Architecture</h4>
+                <div class="pts" id="arrangement-score">0/25</div>
+            </div>
+            <div class="score-card">
+                <h4>System Compatibility</h4>
+                <div class="pts" id="compat-score">0/25</div>
+            </div>
+        </div>
+
+        <h3 style="margin-top: 20px;">Engineering Diagnostics:</h3>
+        <ul class="feedback-list" id="feedback-list"></ul>
+
+        <button class="action-btn next-btn" onclick="nextMission()">Next Challenge →</button>
+    </div>
+</div>
+
+<script>
+    // State Tracker
+    const currentSelections = {
+        matrix: 'polymer',
+        fiber: 'carbon',
+        arrangement: 'continuous_uni'
+    };
+
+    const missions = [
+        {
+            title: "Mission 1: Next-Gen Commercial Aircraft Wing Spar",
+            desc: "Design a lightweight main structural beam for a commercial jet wing. The component experiences severe bending loads primarily along a single directional axis.",
+            reqs: "Requirements: Extreme Specific Strength, High Axial Stiffness, Directional Loading Support.",
+            ideal: { matrix: "polymer", fiber: "carbon", arrangement: "continuous_uni" }
+        },
+        {
+            title: "Mission 2: Hypersonic Jet Turbine Combustion Chamber",
+            desc: "Design a composite sleeve for an internal propulsion system operating continuously at temperatures above 1100°C without oxidizing or losing structural integrity.",
+            reqs: "Requirements: Extreme Thermal Resistance (>1000°C), High Thermal Shock Resistance.",
+            ideal: { matrix: "ceramic", fiber: "sic", arrangement: "continuous_woven" }
+        },
+        {
+            title: "Mission 3: Tactical Ballistic Armor Insert",
+            desc: "Design an armor plate for protective vests. The material must absorb and dissipate extreme kinetic energy from incoming projectile impacts without shattering.",
+            reqs: "Requirements: High Impact Energy Absorption, High Toughness, Shatter Resistance.",
+            ideal: { matrix: "polymer", fiber: "kevlar", arrangement: "continuous_woven" }
+        },
+        {
+            title: "Mission 4: Automotive Engine Valve Cover",
+            desc: "Design a high-volume mass-produced engine cover. It requires complex geometry, moderate heat tolerance (~120°C), low production cost, and uniform strength in all directions.",
+            reqs: "Requirements: Moldability into Complex Shapes, Low Cost, Isotropic Properties.",
+            ideal: { matrix: "polymer", fiber: "glass", arrangement: "discontinuous_random" }
+        }
+    ];
+
+    let currentMissionIdx = 0;
+
+    function selectOption(category, value, element) {
+        currentSelections[category] = value;
+        // Update Card Selection UI
+        const parent = element.parentElement;
+        const cards = parent.querySelectorAll('.option-card');
+        cards.forEach(card => card.classList.remove('selected'));
+        element.classList.add('selected');
+    }
+
+    function loadMission() {
+        const m = missions[currentMissionIdx];
+        document.getElementById('mission-title').innerText = m.title;
+        document.getElementById('mission-desc').innerText = m.desc;
+        document.getElementById('mission-reqs').innerText = m.reqs;
+        document.getElementById('results-panel').style.display = 'none';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function evaluateDesign() {
+        const { matrix, fiber, arrangement } = currentSelections;
+        const mission = missions[currentMissionIdx];
+        const feedback = [];
+        
+        let matrixPts = matrix === mission.ideal.matrix ? 25 : 10;
+        let fiberPts = fiber === mission.ideal.fiber ? 25 : 10;
+        let arrangementPts = arrangement === mission.ideal.arrangement ? 25 : 10;
+        let compatPts = 25;
+
+        // Matrix Feedback
+        if (matrixPts === 25) {
+            feedback.push(`<strong>Matrix (${capitalize(matrix)}):</strong> Ideal selection for operational thermal and load demands.`);
+        } else {
+            feedback.push(`<strong>Matrix (${capitalize(matrix)}):</strong> Suboptimal. Does not match thermal or processing constraints.`);
+        }
+
+        // Fiber Feedback
+        if (fiberPts === 25) {
+            feedback.push(`<strong>Fiber (${capitalize(fiber)}):</strong> Perfect match for required strength-to-weight and mechanical performance.`);
+        } else {
+            feedback.push(`<strong>Fiber (${capitalize(fiber)}):</strong> Inefficient material choice for primary mission requirements.`);
+        }
+
+        // Arrangement Feedback
+        if (arrangementPts === 25) {
+            feedback.push(`<strong>Architecture:</strong> Excellent structural alignment for expected stress vectors.`);
+        } else {
+            feedback.push(`<strong>Architecture:</strong> Misaligned fiber directionality fails to support load distributions efficiently.`);
+        }
+
+        // Failure/Compatibility Checks
+        if (matrix === 'polymer' && (fiber === 'sic' || currentMissionIdx === 1)) {
+            compatPts = 0;
+            feedback.push(`<strong>CRITICAL FAILURE:</strong> Polymer matrix incinerates under extreme mission temperatures!`);
+        } else if (matrix === 'ceramic' && arrangement === 'discontinuous_random' && currentMissionIdx !== 3) {
+            compatPts = 5;
+            feedback.push(`<strong>WARNING:</strong> Short fibers in ceramic matrix yield brittle failure mode under high load.`);
+        } else {
+            feedback.push(`<strong>Compatibility:</strong> Excellent phase interface stability.`);
+        }
+
+        const totalPts = matrixPts + fiberPts + arrangementPts + compatPts;
+
+        // UI Updates
+        document.getElementById('matrix-score').innerText = `${matrixPts}/25`;
+        document.getElementById('fiber-score').innerText = `${fiberPts}/25`;
+        document.getElementById('arrangement-score').innerText = `${arrangementPts}/25`;
+        document.getElementById('compat-score').innerText = `${compatPts}/25`;
+        document.getElementById('total-points').innerText = totalPts;
+
+        const feedbackList = document.getElementById('feedback-list');
+        feedbackList.innerHTML = '';
+        feedback.forEach(item => {
+            const li = document.createElement('li');
+            li.innerHTML = item;
+            feedbackList.appendChild(li);
+        });
+
+        const panel = document.getElementById('results-panel');
+        panel.style.display = 'block';
+        panel.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function nextMission() {
+        currentMissionIdx = (currentMissionIdx + 1) % missions.length;
+        loadMission();
+    }
+
+    function capitalize(str) {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    // Initialize
+    loadMission();
+</script>
+
+</body>
+</html>
